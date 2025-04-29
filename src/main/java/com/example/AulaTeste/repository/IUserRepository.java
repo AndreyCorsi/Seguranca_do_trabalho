@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.AulaTeste.model.UserModel;
+import com.example.AulaTeste.model.Usuario;
 
-public interface IUserRepository extends JpaRepository<UserModel, UUID> {
-  UserModel findByEmail(String email);
-  UserModel deleteByEmail(String email);
+public interface IUserRepository extends JpaRepository<Usuario, UUID> {
+  Usuario findByEmail(String email);
+  Usuario deleteByEmail(String email);
 }
