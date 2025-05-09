@@ -1,105 +1,207 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Usuários - Demo</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 600px;
-        margin: 40px auto;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulário de Trabalho Seguro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #eef6f8;
+      padding: 40px;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 16px;
+      color: #006064;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 12px;
+      display: block;
+    }
+    .checkbox-group label {
+      margin-top: 8px;
+      display: block;
+    }
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 4px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .hidden {
+      display: none;
+    }
+    .result-box {
+      background: #e0f7fa;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #00796b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <form id="formulario">
+      <!-- Etapa 1: Dados do trabalhador -->
+      <h2>Etapa 1: Identificação</h2>
+      <label>Nome</label>
+      <input type="text" name="nome" required />
+      <label>Setor</label>
+      <input type="text" name="setor" required />
+      <label>Empresa</label>
+      <input type="text" name="empresa" required />
+      <label>Email</label>
+      <input type="email" name="email" required />
+      <label>PTP</label>
+      <input type="text" name="ptp" required />
+
+
+      <!-- Etapa 2: Tipo de trabalho -->
+      <h2>Etapa 2: Tipo de Trabalho</h2>
+      <div class="checkbox-group">
+        <label><input type="checkbox" value="Trabalho em Altura" onchange="mostrarRiscos(this)"> Trabalho em Altura</label>
+        <label><input type="checkbox" value="Espaço Confinado" onchange="mostrarRiscos(this)"> Espaço Confinado</label>
+        <label><input type="checkbox" value="Içamento de carga" onchange="mostrarRiscos(this)"> Içamento de carga</label>
+        <label><input type="checkbox" value="Equipamentos móveis" onchange="mostrarRiscos(this)"> Equipamentos móveis</label>
+        <label><input type="checkbox" value="Energia Perigosa" onchange="mostrarRiscos(this)"> Energia Perigosa</label>
+      </div>
+
+
+      <!-- Etapa 3: Riscos -->
+      <div id="riscos-altura" class="hidden">
+        <label>Riscos - Trabalho em Altura:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="Queda de altura" onchange="mostrarEPIs('Trabalho em Altura')"> Queda de altura</label>
+          <label><input type="checkbox" value="Choque contra estruturas" onchange="mostrarEPIs('Trabalho em Altura')"> Choque contra estruturas</label>
+          <label><input type="checkbox" value="Queda de materiais sobre pessoas abaixo" onchange="mostrarEPIs('Trabalho em Altura')"> Queda de materiais sobre pessoas abaixo</label>
+          <label><input type="checkbox" value="Choque elétrico" onchange="mostrarEPIs('Trabalho em Altura')"> Choque elétrico</label>
+          <label><input type="checkbox" value="Fadiga ou mal-estar do trabalhador" onchange="mostrarEPIs('Trabalho em Altura')"> Fadiga ou mal-estar do trabalhador</label>
+          <label><input type="checkbox" value="Falha ou uso inadequado dos EPIs" onchange="mostrarEPIs('Trabalho em Altura')"> Falha ou uso inadequado dos EPIs</label>
+          <label><input type="checkbox" value="Condições climáticas adversas" onchange="mostrarEPIs('Trabalho em Altura')"> Condições climáticas adversas</label>
+          <label><input type="checkbox" value="Superfícies instáveis ou frágeis" onchange="mostrarEPIs('Trabalho em Altura')"> Superfícies instáveis ou frágeis</label>
+          <label><input type="checkbox" value="Acesso inadequado ao local de trabalho" onchange="mostrarEPIs('Trabalho em Altura')"> Acesso inadequado ao local de trabalho</label>
+          <label><input type="checkbox" value="Falta de ancoragem ou fixação inadequada" onchange="mostrarEPIs('Trabalho em Altura')"> Falta de ancoragem ou fixação inadequada</label>
+        </div>
+      </div>
+
+
+      <!-- Etapa 4: EPIs e Medidas -->
+      <div id="epis-altura" class="hidden">
+        <label>EPIs e Medidas de Controle:</label>
+        <div class="result-box" id="detalhes-altura"></div>
+      </div>
+
+
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+
+  <script>
+    const dadosRiscos = {
+      "Trabalho em Altura": {
+        "Queda de altura": {
+          epis: ["Cinto de segurança tipo paraquedista", "Talabarte de segurança", "Capacete com jugular", "Calçado antiderrapante"],
+          medidas: ["Uso de linha de vida ou ponto de ancoragem certificado", "Inspeção dos EPIs antes do uso", "Treinamento específico para trabalho em altura", "Autorização para trabalho (PTP)"]
+        },
+        "Choque contra estruturas": {
+          epis: ["Capacete com jugular", "Luvas de proteção", "Vestimenta adequada"],
+          medidas: ["Planejamento da movimentação no local de trabalho", "Sinalização de áreas de risco", "Treinamento para movimentação segura"]
+        },
+        "Queda de materiais sobre pessoas abaixo": {
+          epis: ["Capacete de segurança", "Calçado de segurança"],
+          medidas: ["Delimitação da área abaixo do trabalho", "Uso de cinto porta-ferramentas", "Sinalização de risco de queda de materiais"]
+        },
+        "Choque elétrico": {
+          epis: ["Luvas isolantes", "Tapete isolante", "Vestimenta antichama"],
+          medidas: ["Desenergização e bloqueio de circuitos elétricos", "Uso de ferramentas isoladas", "Distância segura de redes energizadas"]
+        },
+        "Fadiga ou mal-estar do trabalhador": {
+          epis: ["Roupas leves e confortáveis"],
+          medidas: ["Intervalos regulares para descanso e hidratação", "Monitoramento das condições de saúde", "Evitar excesso de tempo em altura"]
+        },
+        "Falha ou uso inadequado dos EPIs": {
+          epis: ["Equipamentos certificados e adequados"],
+          medidas: ["Inspeção e manutenção periódica dos EPIs", "Treinamento sobre uso correto", "Fiscalização no local"]
+        },
+        "Condições climáticas adversas": {
+          epis: ["Roupas impermeáveis", "Calçados antiderrapantes"],
+          medidas: ["Monitoramento das condições climáticas", "Suspensão do trabalho em condições perigosas", "Uso de ancoragem reforçada"]
+        },
+        "Superfícies instáveis ou frágeis": {
+          epis: ["Cinto de segurança paraquedista", "Talabarte duplo com absorvedor de energia"],
+          medidas: ["Inspeção prévia das superfícies", "Uso de escoras e reforços", "Evitar deslocamento sem ancoragem"]
+        },
+        "Acesso inadequado ao local de trabalho": {
+          epis: ["Cinto de segurança com talabarte", "Escada de segurança"],
+          medidas: ["Planejamento seguro da subida/descida", "Uso de escadas e andaimes certificados", "Verificação da estabilidade do acesso"]
+        },
+        "Falta de ancoragem ou fixação inadequada": {
+          epis: ["Cinto tipo paraquedista", "Talabarte com absorvedor de impacto"],
+          medidas: ["Pontos de ancoragem certificados", "Teste de resistência antes do uso", "Não usar estruturas não seguras"]
+        }
+      }
+      
+    };
+
+
+    function mostrarRiscos(checkbox) {
+      if (checkbox.value === "Trabalho em Altura") {
+        document.getElementById("riscos-altura").classList.toggle("hidden", !checkbox.checked);
+        document.getElementById("epis-altura").classList.add("hidden");
+        document.getElementById("detalhes-altura").innerHTML = "";
+      }
+    }
+
+
+    function mostrarEPIs(atividade) {
+      const riscosSelecionados = [...document.querySelectorAll('#riscos-altura input:checked')].map(el => el.value);
+      const detalhes = document.getElementById("detalhes-altura");
+      detalhes.innerHTML = "";
+
+
+      if (riscosSelecionados.length === 0) {
+        document.getElementById("epis-altura").classList.add("hidden");
+        return;
       }
 
-      h2 {
-        margin-top: 30px;
-        border-bottom: 1px solid #ccc;
-        padding-bottom: 5px;
-      }
 
-      input,
-      button {
-        display: block;
-        margin: 10px 0;
-        padding: 8px;
-        width: 100%;
-      }
+      riscosSelecionados.forEach(risco => {
+        const info = dadosRiscos[atividade][risco];
+        if (info) {
+          detalhes.innerHTML += `
+            <strong>${risco}</strong><br/>
+            <em>EPIs:</em> ${info.epis.join(", ")}<br/>
+            <em>Medidas:</em> ${info.medidas.join(", ")}<br/><br/>
+          `;
+        }
+      });
 
-      .resposta {
-        margin-top: 10px;
-        font-weight: bold;
-      }
 
-      ul {
-        padding-left: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Sistema de Usuários</h1>
-
-    <h2>Criar usuário</h2>
-    <input type="text" id="nome" placeholder="Nome" />
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="senha" placeholder="Senha" />
-    <button onclick="criarUsuario()">Cadastrar</button>
-    <div class="resposta" id="respostaCadastro"></div>
-
-    <h2>Login</h2>
-    <input type="email" id="loginEmail" placeholder="Email" />
-    <input type="password" id="loginSenha" placeholder="Senha" />
-    <button onclick="fazerLogin()">Entrar</button>
-    <div class="resposta" id="respostaLogin"></div>
-
-    <h2>Todos os usuários</h2>
-    <button onclick="listarUsuarios()">Listar usuários</button>
-    <ul id="listaUsuarios"></ul>
-
-    <script>
-      function criarUsuario() {
-        const nome = document.getElementById("nome").value;
-        const email = document.getElementById("email").value;
-        const senha = document.getElementById("senha").value;
-
-        fetch("/usuarios/criar", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nome, email, senha }),
-        })
-          .then((res) => res.text())
-          .then((data) => {
-            document.getElementById("respostaCadastro").innerText = data;
-          });
-      }
-
-      function fazerLogin() {
-        const email = document.getElementById("loginEmail").value;
-        const senha = document.getElementById("loginSenha").value;
-
-        fetch("/usuarios/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, senha }),
-        })
-          .then((res) => res.text())
-          .then((data) => {
-            document.getElementById("respostaLogin").innerText = data;
-          });
-      }
-
-      function listarUsuarios() {
-        fetch("/usuarios/todos")
-          .then((res) => res.json())
-          .then((usuarios) => {
-            const lista = document.getElementById("listaUsuarios");
-            lista.innerHTML = "";
-            usuarios.forEach((u) => {
-              const li = document.createElement("li");
-              li.textContent = `${u.nome} (${u.email})`;
-              lista.appendChild(li);
-            });
-          });
-      }
-    </script>
-  </body>
+      document.getElementById("epis-altura").classList.remove("hidden");
+    }
+  </script>
+</body>
 </html>
+

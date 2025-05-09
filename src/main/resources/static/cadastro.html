@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cadastro e Login</title>
+<style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #056e4f, #044726);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+  .container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 360px;
+    padding: 2rem;
+  }
+  h2 {
+    margin-top: 0;
+    text-align: center;
+    color: #044726;
+    margin-bottom: 1.5rem;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #044726;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 7px;
+    border: 1.5px solid #ddd;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #044726;
+    outline: none;
+  }
+  button {
+    background: #044726;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #044726;
+  }
+  .link-btn {
+    background: transparent;
+    color: #000000da;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    text-decoration: underline;
+  }
+  .error-message {
+    color: #d32f2f;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .success-message {
+    color: #388e3c;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  /* Hide sections by default */
+  section {
+    display: none;
+  }
+  section.active {
+    display: block;
+  }
+  .welcome-section {
+    text-align: center;
+  }
+  .welcome-section h2 {
+    margin-bottom: 1rem;
+  }
+  .welcome-section button {
+    background: #4caf50;
+    margin-top: 1.5rem;
+  }
+  /* Responsive adjustments */
+  @media (max-width: 400px) {
+    .container {
+      max-width: 100%;
+      padding: 1.2rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <!-- Registration Section -->
+    <section id="register-section" class="active" aria-label="Registro">
+      <h2>Cadastro</h2>
+      <div id="register-error" class="error-message" role="alert" aria-live="assertive"></div>
+      <form id="register-form" novalidate>
+        <label for="reg-name">Nome</label>
+        <input type="text" id="reg-name" name="name" required autocomplete="name" placeholder="Seu Nome" />
+        
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" name="email" required autocomplete="email" placeholder="exemplo@dominio.com" />
+        
+        <label for="reg-password">Senha</label>
+        <input type="password" id="reg-password" name="password" required autocomplete="new-password" placeholder="Senha" minlength="6" />
+        
+        <button type="submit">Cadastrar</button>
+      </form>
+      <button class="link-btn" id="to-login-btn">Já tem uma conta? Entrar</button>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login-section" aria-label="Login">
+      <h2>Login</h2>
+      <div id="login-error" class="error-message" role="alert" aria-live="assertive"></div>
+      <form id="login-form" novalidate>
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" name="email" required autocomplete="username" placeholder="exemplo@dominio.com" />
+        
+        <label for="login-password">Senha</label>
+        <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Senha" />
+        
+        <button type="submit">Entrar</button>
+      </form>
+      <button class="link-btn" id="to-register-btn">Não tem conta? Cadastre-se</button>
+    </section>
+  </div>
+
+  <script>
+    // Elements
+    const registerSection = document.getElementById('register-section');
+    const loginSection = document.getElementById('login-section');
+
+    const toLoginBtn = document.getElementById('to-login-btn');
+    const toRegisterBtn = document.getElementById('to-register-btn');
+
+    const registerForm = document.getElementById('register-form');
+    const registerError = document.getElementById('register-error');
+
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    // Show section helper
+    function showSection(section) {
+      registerSection.classList.remove('active');
+      loginSection.classList.remove('active');
+      section.classList.add('active');
+    }
+
+    // Save user to localStorage
+    function saveUser(name, email, password) {
+      let users = JSON.parse(localStorage.getItem('users') || '{}');
+      if (users[email]) {
+        return false; // email already registered
+      }
+      users[email] = { name: name, password: password };
+      localStorage.setItem('users', JSON.stringify(users));
+      return true;
+    }
+
+    // Validate email format simple
+    function isValidEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email.toLowerCase());
+    }
+
+    // Register form submit
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      registerError.textContent = '';
+
+      const name = registerForm['name'].value.trim();
+      const email = registerForm['email'].value.trim().toLowerCase();
+      const password = registerForm['password'].value;
+
+      if (!name) {
+        registerError.textContent = 'Por favor, informe seu nome.';
+        return;
+      }
+      if (!email || !isValidEmail(email)) {
+        registerError.textContent = 'Por favor, informe um email válido.';
+        return;
+      }
+      if (!password || password.length < 6) {
+        registerError.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+        return;
+      }
+
+      if (!saveUser(name, email, password)) {
+        registerError.textContent = 'Este email já está cadastrado.';
+        return;
+      }
+
+      alert('Cadastro realizado com sucesso! Faça login para continuar.');
+      registerForm.reset();
+      showSection(loginSection);
+    });
+
+    // Login form submit - MODIFICADO PARA REDIRECIONAR
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loginError.textContent = '';
+
+      const email = loginForm['email'].value.trim().toLowerCase();
+      const password = loginForm['password'].value;
+
+      if (!email || !isValidEmail(email)) {
+        loginError.textContent = 'Por favor, informe um email válido.';
+        return;
+      }
+      if (!password) {
+        loginError.textContent = 'Informe sua senha.';
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem('users') || '{}');
+      if (!(email in users) || users[email].password !== password) {
+        loginError.textContent = 'Email ou senha inválidos.';
+        return;
+      }
+
+      // Redireciona para o formulário principal (index.html)
+      window.location.href = 'index.html';
+    });
+
+    // Navigation buttons
+    toLoginBtn.addEventListener('click', () => {
+      registerError.textContent = '';
+      registerForm.reset();
+      showSection(loginSection);
+    });
+
+    toRegisterBtn.addEventListener('click', () => {
+      loginError.textContent = '';
+      loginForm.reset();
+      showSection(registerSection);
+    });
+
+    // On load, show registration
+    showSection(registerSection);
+  </script>
+</body>
+</html>
+
