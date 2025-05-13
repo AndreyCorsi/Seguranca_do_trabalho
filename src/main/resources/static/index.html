@@ -32,7 +32,7 @@
       margin-top: 8px;
       display: block;
     }
-    input[type="text"], input[type="email"] {
+    input[type="text"], input[type="email"], input[type="time"] {
       width: 100%;
       padding: 10px;
       margin-top: 4px;
@@ -58,6 +58,21 @@
       border-radius: 8px;
       cursor: pointer;
     }
+    #outras-atividades {
+      width: 100%;
+      padding: 10px;
+      margin-top: 4px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .time-inputs {
+      display: flex;
+      gap: 20px;
+    }
+    .time-inputs div {
+      flex: 1;
+    }
   </style>
 </head>
 <body>
@@ -75,8 +90,21 @@
       <input type="email" name="email" required />
       <label>PTP</label>
       <input type="text" name="ptp" required />
+      <label>Local Específico do Trabalho</label>
+      <input type="text" name="local" required placeholder="Descreva o local exato onde será realizado o trabalho" />
+      
+      <div class="time-inputs">
+        <div>
+          <label>Hora de Início</label>
+          <input type="time" name="hora-inicio" required />
+        </div>
+        <div>
+          <label>Previsão de Término</label>
+          <input type="time" name="hora-termino" required />
+        </div>
+      </div>
 
-
+      <!-- Restante do formulário permanece igual -->
       <!-- Etapa 2: Tipo de trabalho -->
       <h2>Etapa 2: Tipo de Trabalho</h2>
       <div class="checkbox-group">
@@ -87,8 +115,13 @@
         <label><input type="checkbox" value="Energia Perigosa" onchange="mostrarRiscos(this)"> Energia Perigosa</label>
       </div>
 
+      <!-- Campo de outras atividades -->
+      <label>Outras atividades (especifique)</label>
+      <input type="text" id="outras-atividades" name="outras-atividades" placeholder="Descreva outras atividades relevantes">
 
-      <!-- Etapa 3: Riscos -->
+      <!-- Seções de Riscos para cada tipo de trabalho -->
+      
+      <!-- Trabalho em Altura -->
       <div id="riscos-altura" class="hidden">
         <label>Riscos - Trabalho em Altura:</label>
         <div class="checkbox-group">
@@ -105,18 +138,119 @@
         </div>
       </div>
 
+      <!-- Içamento de Carga -->
+      <div id="riscos-icamento" class="hidden">
+        <label>Riscos - Içamento de Carga:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="Queda de cargas" onchange="mostrarEPIs('Içamento de carga')"> Queda de cargas</label>
+          <label><input type="checkbox" value="Sobrecargas" onchange="mostrarEPIs('Içamento de carga')"> Sobrecargas</label>
+          <label><input type="checkbox" value="Falta de comunicação" onchange="mostrarEPIs('Içamento de carga')"> Falta de comunicação</label>
+          <label><input type="checkbox" value="Falhas mecânicas" onchange="mostrarEPIs('Içamento de carga')"> Falhas mecânicas</label>
+          <label><input type="checkbox" value="Más condições climáticas" onchange="mostrarEPIs('Içamento de carga')"> Más condições climáticas</label>
+          <label><input type="checkbox" value="Choque elétrico" onchange="mostrarEPIs('Içamento de carga')"> Choque elétrico</label>
+          <label><input type="checkbox" value="Queda de pessoas" onchange="mostrarEPIs('Içamento de carga')"> Queda de pessoas</label>
+          <label><input type="checkbox" value="Ruptura de cabos/cintas" onchange="mostrarEPIs('Içamento de carga')"> Ruptura de cabos/cintas</label>
+          <label><input type="checkbox" value="Carga mal acondicionada ou instável" onchange="mostrarEPIs('Içamento de carga')"> Carga mal acondicionada ou instável</label>
+          <label><input type="checkbox" value="Colisão da carga com estruturas" onchange="mostrarEPIs('Içamento de carga')"> Colisão da carga com estruturas</label>
+          <label><input type="checkbox" value="Erro humano" onchange="mostrarEPIs('Içamento de carga')"> Erro humano</label>
+          <label><input type="checkbox" value="Trabalho em área não isolada" onchange="mostrarEPIs('Içamento de carga')"> Trabalho em área não isolada</label>
+          <label><input type="checkbox" value="Uso de equipamentos inadequados" onchange="mostrarEPIs('Içamento de carga')"> Uso de equipamentos inadequados</label>
+        </div>
+      </div>
 
-      <!-- Etapa 4: EPIs e Medidas -->
+      <!-- Espaço Confinado -->
+      <div id="riscos-espaco-confinado" class="hidden">
+        <label>Riscos - Espaço Confinado:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="Falta de oxigênio" onchange="mostrarEPIs('Espaço Confinado')"> Falta de oxigênio</label>
+          <label><input type="checkbox" value="Ruídos" onchange="mostrarEPIs('Espaço Confinado')"> Ruídos</label>
+          <label><input type="checkbox" value="Gases tóxicos ou inflamáveis" onchange="mostrarEPIs('Espaço Confinado')"> Gases tóxicos ou inflamáveis</label>
+          <label><input type="checkbox" value="Calor excessivo" onchange="mostrarEPIs('Espaço Confinado')"> Calor excessivo</label>
+          <label><input type="checkbox" value="Umidade elevada" onchange="mostrarEPIs('Espaço Confinado')"> Umidade elevada</label>
+          <label><input type="checkbox" value="Riscos biológicos" onchange="mostrarEPIs('Espaço Confinado')"> Riscos biológicos</label>
+          <label><input type="checkbox" value="Riscos mecânicos" onchange="mostrarEPIs('Espaço Confinado')"> Riscos mecânicos</label>
+          <label><input type="checkbox" value="Atmosfera explosiva" onchange="mostrarEPIs('Espaço Confinado')"> Atmosfera explosiva</label>
+          <label><input type="checkbox" value="Iluminação inadequada" onchange="mostrarEPIs('Espaço Confinado')"> Iluminação inadequada</label>
+          <label><input type="checkbox" value="Risco de quedas" onchange="mostrarEPIs('Espaço Confinado')"> Risco de quedas</label>
+          <label><input type="checkbox" value="Choque elétrico" onchange="mostrarEPIs('Espaço Confinado')"> Choque elétrico</label>
+          <label><input type="checkbox" value="Movimentação de partes mecânicas" onchange="mostrarEPIs('Espaço Confinado')"> Movimentação de partes mecânicas</label>
+          <label><input type="checkbox" value="Estresse térmico" onchange="mostrarEPIs('Espaço Confinado')"> Estresse térmico</label>
+          <label><input type="checkbox" value="Dificuldade de comunicação" onchange="mostrarEPIs('Espaço Confinado')"> Dificuldade de comunicação</label>
+          <label><input type="checkbox" value="Risco ergonômico" onchange="mostrarEPIs('Espaço Confinado')"> Risco ergonômico</label>
+          <label><input type="checkbox" value="Contaminação cruzada" onchange="mostrarEPIs('Espaço Confinado')"> Contaminação cruzada</label>
+        </div>
+      </div>
+
+      <!-- Equipamentos Móveis -->
+      <div id="riscos-equipamentos-moveis" class="hidden">
+        <label>Riscos - Equipamentos Móveis:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="Atropelamento" onchange="mostrarEPIs('Equipamentos móveis')"> Atropelamento</label>
+          <label><input type="checkbox" value="Colisão" onchange="mostrarEPIs('Equipamentos móveis')"> Colisão</label>
+          <label><input type="checkbox" value="Tombamento" onchange="mostrarEPIs('Equipamentos móveis')"> Tombamento</label>
+          <label><input type="checkbox" value="Queda de materiais" onchange="mostrarEPIs('Equipamentos móveis')"> Queda de materiais</label>
+          <label><input type="checkbox" value="Aprisionamento" onchange="mostrarEPIs('Equipamentos móveis')"> Aprisionamento</label>
+          <label><input type="checkbox" value="Capotamento" onchange="mostrarEPIs('Equipamentos móveis')"> Capotamento</label>
+          <label><input type="checkbox" value="Vibração excessiva" onchange="mostrarEPIs('Equipamentos móveis')"> Vibração excessiva</label>
+          <label><input type="checkbox" value="Ruído elevado" onchange="mostrarEPIs('Equipamentos móveis')"> Ruído elevado</label>
+          <label><input type="checkbox" value="Inalação de gases e vapores" onchange="mostrarEPIs('Equipamentos móveis')"> Inalação de gases e vapores</label>
+          <label><input type="checkbox" value="Falha mecânica" onchange="mostrarEPIs('Equipamentos móveis')"> Falha mecânica</label>
+          <label><input type="checkbox" value="Risco elétrico" onchange="mostrarEPIs('Equipamentos móveis')"> Risco elétrico</label>
+          <label><input type="checkbox" value="Risco ergonômico" onchange="mostrarEPIs('Equipamentos móveis')"> Risco ergonômico</label>
+          <label><input type="checkbox" value="Incêndio ou explosão" onchange="mostrarEPIs('Equipamentos móveis')"> Incêndio ou explosão</label>
+          <label><input type="checkbox" value="Contato com partes quentes" onchange="mostrarEPIs('Equipamentos móveis')"> Contato com partes quentes</label>
+          <label><input type="checkbox" value="Falta de visibilidade" onchange="mostrarEPIs('Equipamentos móveis')"> Falta de visibilidade</label>
+        </div>
+      </div>
+
+      <!-- Energia Perigosa -->
+      <div id="riscos-energia-perigosa" class="hidden">
+        <label>Riscos - Energia Perigosa:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="Elétrica" onchange="mostrarEPIs('Energia Perigosa')"> Elétrica</label>
+          <label><input type="checkbox" value="Hidráulica" onchange="mostrarEPIs('Energia Perigosa')"> Hidráulica</label>
+          <label><input type="checkbox" value="Pneumática" onchange="mostrarEPIs('Energia Perigosa')"> Pneumática</label>
+          <label><input type="checkbox" value="Química" onchange="mostrarEPIs('Energia Perigosa')"> Química</label>
+          <label><input type="checkbox" value="Mecânica" onchange="mostrarEPIs('Energia Perigosa')"> Mecânica</label>
+          <label><input type="checkbox" value="Térmica" onchange="mostrarEPIs('Energia Perigosa')"> Térmica</label>
+          <label><input type="checkbox" value="Radiação" onchange="mostrarEPIs('Energia Perigosa')"> Radiação</label>
+          <label><input type="checkbox" value="Gravitacional" onchange="mostrarEPIs('Energia Perigosa')"> Gravitacional</label>
+          <label><input type="checkbox" value="Residual" onchange="mostrarEPIs('Energia Perigosa')"> Residual</label>
+          <label><input type="checkbox" value="Cinética" onchange="mostrarEPIs('Energia Perigosa')"> Cinética</label>
+          <label><input type="checkbox" value="Sonora (ruído)" onchange="mostrarEPIs('Energia Perigosa')"> Sonora (ruído)</label>
+          <label><input type="checkbox" value="Lumínica (ofuscamento)" onchange="mostrarEPIs('Energia Perigosa')"> Lumínica (ofuscamento)</label>
+        </div>
+      </div>
+
+      <!-- Seções de EPIs e Medidas para cada tipo de trabalho -->
       <div id="epis-altura" class="hidden">
-        <label>EPIs e Medidas de Controle:</label>
+        <label>EPIs e Medidas de Controle - Trabalho em Altura:</label>
         <div class="result-box" id="detalhes-altura"></div>
       </div>
 
+      <div id="epis-icamento" class="hidden">
+        <label>EPIs e Medidas de Controle - Içamento de Carga:</label>
+        <div class="result-box" id="detalhes-icamento"></div>
+      </div>
+
+      <div id="epis-espaco-confinado" class="hidden">
+        <label>EPIs e Medidas de Controle - Espaço Confinado:</label>
+        <div class="result-box" id="detalhes-espaco-confinado"></div>
+      </div>
+
+      <div id="epis-equipamentos-moveis" class="hidden">
+        <label>EPIs e Medidas de Controle - Equipamentos Móveis:</label>
+        <div class="result-box" id="detalhes-equipamentos-moveis"></div>
+      </div>
+
+      <div id="epis-energia-perigosa" class="hidden">
+        <label>EPIs e Medidas de Controle - Energia Perigosa:</label>
+        <div class="result-box" id="detalhes-energia-perigosa"></div>
+      </div>
 
       <button type="submit">Enviar</button>
     </form>
   </div>
-
 
   <script>
     const dadosRiscos = {
@@ -161,31 +295,271 @@
           epis: ["Cinto tipo paraquedista", "Talabarte com absorvedor de impacto"],
           medidas: ["Pontos de ancoragem certificados", "Teste de resistência antes do uso", "Não usar estruturas não seguras"]
         }
+      },
+      "Içamento de carga": {
+        "Queda de cargas": {
+          epis: ["Capacete com jugular", "Bota com biqueira de aço"],
+          medidas: ["Isolamento da área de içamento", "Sinalização de segurança", "Treinamento específico para amarração de carga"]
+        },
+        "Sobrecargas": {
+          epis: ["Luvas de proteção (ao manusear cintas/cabos)", "Capacete"],
+          medidas: ["Verificação da carga máxima dos equipamentos", "Uso de checklists e planos de içamento", "Supervisão técnica da operação"]
+        },
+        "Falta de comunicação": {
+          epis: ["Rádio comunicador", "Coletes reflexivos para identificação visual"],
+          medidas: ["Definição de sinais padronizados", "Reunião prévia de alinhamento (briefing)", "Presença de sinalizador (rigger)"]
+        },
+        "Falhas mecânicas": {
+          epis: ["Capacete", "Bota de segurança"],
+          medidas: ["Inspeção preventiva dos equipamentos", "Manutenção periódica conforme manual do fabricante", "Afastamento de pessoas da zona de risco"]
+        },
+        "Más condições climáticas": {
+          epis: ["Roupas impermeáveis (em caso de chuva)", "Luvas antiderrapantes"],
+          medidas: ["Suspensão da atividade em caso de vento forte, chuva ou baixa visibilidade", "Monitoramento das condições climáticas", "Planejamento do içamento conforme previsão do tempo"]
+        },
+        "Choque elétrico": {
+          epis: ["Bota com solado isolante", "Capacete com aba"],
+          medidas: ["Avaliação prévia da rede elétrica próxima", "Respeito à zona de segurança", "Isolamento ou desligamento da rede (quando possível)"]
+        },
+        "Queda de pessoas": {
+          epis: ["Cinturão de segurança com talabarte", "Capacete com jugular"],
+          medidas: ["Uso de linha de vida ou pontos de ancoragem", "Treinamento em trabalho em altura", "Fiscalização e autorização para acesso em altura"]
+        },
+        "Ruptura de cabos/cintas": {
+          epis: ["Luvas de proteção contra abrasão", "Capacete"],
+          medidas: ["Inspeção visual antes do uso", "Substituição imediata de cintas danificadas", "Uso de equipamentos com certificação"]
+        },
+        "Carga mal acondicionada ou instável": {
+          epis: ["Capacete", "Bota de segurança"],
+          medidas: ["Verificação do centro de gravidade da carga", "Uso correto de acessórios de amarração", "Presença de profissional qualificado na amarração"]
+        },
+        "Colisão da carga com estruturas": {
+          epis: ["Capacete", "Colete reflexivo"],
+          medidas: ["Definição clara de trajeto da carga", "Controle da movimentação com rigger e operador sincronizados", "Sinalização e isolamento da área"]
+        },
+        "Erro humano": {
+          epis: ["Depende da tarefa – geralmente capacete e colete reflexivo"],
+          medidas: ["Treinamento regular da equipe", "Planejamento e simulação de içamento", "Avaliação de competências (reciclagem)"]
+        },
+        "Trabalho em área não isolada": {
+          epis: ["Colete reflexivo", "Capacete"],
+          medidas: ["Isolamento e sinalização do perímetro", "Controle de acesso de pessoas à área de risco", "Comunicação entre equipes no local"]
+        },
+        "Uso de equipamentos inadequados": {
+          epis: ["Capacete", "Bota", "Luvas"],
+          medidas: ["Seleção correta dos equipamentos conforme plano de carga", "Verificação das capacidades nominais (carga segura de trabalho)", "Inspeção de validade e conformidade dos equipamentos"]
+        }
+      },
+      "Espaço Confinado": {
+        "Falta de oxigênio": {
+          epis: ["Máscara autônoma ou linha de ar (se necessário)", "Cinto de segurança tipo paraquedista com linha de vida"],
+          medidas: ["Detecção e monitoramento contínuo da atmosfera (oxímetro)", "Ventilação mecânica/exaustão forçada", "Entrada somente após emissão da Permissão de Entrada e Trabalho (PET)"]
+        },
+        "Ruídos": {
+          epis: ["Protetor auricular tipo plug ou concha (dependendo do nível de decibéis)"],
+          medidas: ["Redução na fonte (máquinas silenciosas, manutenção preventiva)", "Isolamento acústico, se possível"]
+        },
+        "Gases tóxicos ou inflamáveis": {
+          epis: ["Máscara com filtro químico adequado ou autônoma", "Roupa antichama (se houver risco de inflamáveis)"],
+          medidas: ["Detecção com multigás (monitoramento contínuo)", "Ventilação/exaustão adequada", "Proibição de fontes de ignição"]
+        },
+        "Calor excessivo": {
+          epis: ["Roupas leves e ventiladas (exceto se houver risco químico)", "Protetor solar (se houver exposição direta)"],
+          medidas: ["Ventilação ou refrigeração do ambiente", "Planejamento da atividade nos horários mais frescos", "Pausas regulares e hidratação"]
+        },
+        "Umidade elevada": {
+          epis: ["Botas impermeáveis e antiderrapantes", "Roupa impermeável, se necessário"],
+          medidas: ["Avaliação do tempo de permanência no local", "Adoção de medidas para evitar escorregamentos"]
+        },
+        "Riscos biológicos": {
+          epis: ["Luvas de raspa ou vaqueta", "Perneira", "Máscara (se risco de fezes de animais)"],
+          medidas: ["Inspeção prévia do ambiente", "Controle de pragas"]
+        },
+        "Riscos mecânicos": {
+          epis: ["Cinto de segurança com tripé e trava queda", "Capacete com jugular"],
+          medidas: ["Monitoramento de válvulas e sistemas hidráulicos", "Sinalização e isolamento da área", "Plano de emergência e resgate"]
+        },
+        "Atmosfera explosiva": {
+          epis: ["Roupa antichama", "Calçado com solado antiestático"],
+          medidas: ["Aterramento e equipotencialização", "Equipamentos elétricos à prova de explosão (Ex)"]
+        },
+        "Iluminação inadequada": {
+          epis: ["Lanterna de cabeça com baterias seladas"],
+          medidas: ["Iluminação temporária com lanternas ou refletores intrinsecamente seguros"]
+        },
+        "Risco de quedas": {
+          epis: ["Cinto tipo paraquedista com talabarte duplo ou trava queda"],
+          medidas: ["Uso de linha de vida e ancoragem", "Acesso por escada fixa ou plataforma segura"]
+        },
+        "Choque elétrico": {
+          epis: ["Luvas isolantes", "Capacete com aba dielétrica"],
+          medidas: ["Desenergização e bloqueio/etiquetagem (LOTO)", "Afastamento de pontos energizados"]
+        },
+        "Movimentação de partes mecânicas": {
+          epis: ["Luvas de proteção mecânica", "Roupas justas (sem partes soltas)"],
+          medidas: ["Isolamento das partes móveis", "Bloqueio de acionamentos acidentais"]
+        },
+        "Estresse térmico": {
+          epis: ["Camadas respiráveis sob os EPIs principais", "Hidratação constante"],
+          medidas: ["Pausas programadas", "Alternância de tarefas", "Ventilação adequada"]
+        },
+        "Dificuldade de comunicação": {
+          epis: ["Rádio comunicador fixado no EPI"],
+          medidas: ["Uso de rádio comunicadores intrinsecamente seguros", "Sistema de sinalização (corda, gestos, alarmes)"]
+        },
+        "Risco ergonômico": {
+          epis: ["Joelheiras, cintas lombares (se recomendadas)"],
+          medidas: ["Ferramentas apropriadas e bem posicionadas", "Planejamento do trabalho em turnos"]
+        },
+        "Contaminação cruzada": {
+          epis: ["Roupa de proteção química, se necessário", "Máscara com filtro adequado"],
+          medidas: ["Limpeza e inertização do espaço confinado", "Testes de atmosfera antes da entrada"]
+        }
+      },
+      "Equipamentos móveis": {
+        "Atropelamento": {
+          epis: ["Colete refletivo", "Botina de segurança com biqueira de aço"],
+          medidas: ["Delimitação de áreas de circulação de pedestres e veículos", "Uso de sinalização visual e sonora", "Treinamento para operadores e trabalhadores"]
+        },
+        "Colisão": {
+          epis: ["Colete refletivo", "Botina de segurança"],
+          medidas: ["Definição de rotas exclusivas para equipamentos móveis", "Instalação de sensores de proximidade e alarmes sonoros", "Controle de velocidade"]
+        },
+        "Tombamento": {
+          epis: ["Cinto de segurança (em cabines)", "Capacete com jugular"],
+          medidas: ["Inspeção e nivelamento do solo", "Uso de cintos de segurança em cabines", "Restrição de cargas acima da capacidade permitida"]
+        },
+        "Queda de materiais": {
+          epis: ["Capacete", "Botina de segurança"],
+          medidas: ["Amarração adequada da carga", "Uso de barreiras de contenção", "Monitoramento constante do transporte de materiais"]
+        },
+        "Aprisionamento": {
+          epis: ["Luvas de segurança adequadas", "Roupas justas (evitar partes soltas que possam prender)"],
+          medidas: ["Manutenção preventiva dos equipamentos", "Treinamento para operação segura", "Proibição de operar equipamentos sem qualificação"]
+        },
+        "Capotamento": {
+          epis: ["Cinto de segurança (em cabines)", "Capacete com jugular"],
+          medidas: ["Uso de estrutura de proteção contra capotamento (ROPS)", "Restrição de velocidade em terrenos inclinados", "Treinamento específico para operação segura"]
+        },
+        "Vibração excessiva": {
+          epis: ["Luvas antivibração", "Calçado com solado amortecedor"],
+          medidas: ["Uso de assentos com amortecimento", "Pausas regulares para descanso", "Manutenção dos sistemas de suspensão"]
+        },
+        "Ruído elevado": {
+          epis: ["Protetor auricular ou abafador de ruído"],
+          medidas: ["Isolamento acústico em cabines", "Manutenção dos sistemas de escape dos motores", "Uso de equipamentos silenciosos quando possível"]
+        },
+        "Inalação de gases e vapores": {
+          epis: ["Máscara ou respirador adequado para vapores e gases"],
+          medidas: ["Ventilação adequada em ambientes fechados", "Uso de equipamentos elétricos ou a gás em vez de combustão interna quando possível", "Monitoramento da qualidade do ar"]
+        },
+        "Falha mecânica": {
+          epis: ["Luvas de segurança para manutenção", "Óculos de proteção"],
+          medidas: ["Inspeção e manutenção preventiva", "Uso de checklists diários antes da operação", "Substituição imediata de peças desgastadas"]
+        },
+        "Risco elétrico": {
+          epis: ["Luvas isolantes", "Botina com solado isolante"],
+          medidas: ["Uso de aterramento e isolação adequada", "Desenergização para manutenção", "Inspeção frequente dos componentes elétricos"]
+        },
+        "Risco ergonômico": {
+          epis: ["Cinto ergonômico (se necessário)", "Assentos com amortecimento"],
+          medidas: ["Ajuste de assentos e controles conforme o operador", "Alternância de tarefas para evitar sobrecarga", "Uso de suportes para coluna e punhos"]
+        },
+        "Incêndio ou explosão": {
+          epis: ["Luvas resistentes ao calor", "Roupas anti-chama (se houver risco elevado)"],
+          medidas: ["Armazenamento seguro de combustíveis", "Inspeção de vazamentos", "Presença de extintores próximos aos equipamentos"]
+        },
+        "Contato com partes quentes": {
+          epis: ["Luvas térmicas", "Mangas longas resistentes ao calor"],
+          medidas: ["Barreiras de proteção em partes expostas", "Resfriamento adequado antes da manutenção", "Treinamento sobre áreas de risco"]
+        },
+        "Falta de visibilidade": {
+          epis: ["Colete refletivo", "Óculos de segurança (se houver poeira ou partículas)"],
+          medidas: ["Instalação de espelhos e câmeras nos equipamentos", "Uso de luzes e alarmes sonoros de ré", "Iluminação adequada no ambiente de trabalho"]
+        }
+      },
+      "Energia Perigosa": {
+        "Elétrica": {
+          epis: ["Luvas isolantes", "Bota com solado isolante", "Capacete com aba", "Roupas com proteção contra arco elétrico"],
+          medidas: ["Bloqueio e etiquetagem (LOTO)", "Teste de ausência de tensão", "Manutenção por eletricistas qualificados", "Isolamento e sinalização da área"]
+        },
+        "Hidráulica": {
+          epis: ["Luvas de proteção", "Óculos de segurança", "Bota de PVC ou couro"],
+          medidas: ["Alívio de pressão antes da intervenção", "Bloqueio de válvulas e travamento do sistema", "Inspeção de mangueiras e conexões", "Sinalização de sistema pressurizado"]
+        },
+        "Pneumática": {
+          epis: ["Óculos de proteção", "Protetor facial", "Luvas de proteção"],
+          medidas: ["Despressurização completa antes da manutenção", "Bloqueio de válvulas e tubulações", "Manutenção de componentes com certificação", "Uso de mangueiras em boas condições"]
+        },
+        "Química": {
+          epis: ["Luvas de borracha nitrílica ou neoprene", "Avental", "Máscara com filtro adequado (ou respirador)", "Óculos ou protetor facial"],
+          medidas: ["FISPQ disponível e consultada antes do manuseio", "Contenção e ventilação adequada", "Armazenamento seguro conforme compatibilidade química", "Treinamento em resposta a emergências químicas"]
+        },
+        "Mecânica": {
+          epis: ["Luvas (quando apropriadas)", "Roupas ajustadas", "Óculos de proteção", "Capacete"],
+          medidas: ["Isolamento de partes móveis", "Uso de protetores de máquinas", "Desligamento e travamento de equipamentos antes de intervenções", "Manutenção apenas por pessoal autorizado"]
+        },
+        "Térmica": {
+          epis: ["Luvas térmicas", "Avental aluminizado", "Protetor facial", "Roupas resistentes ao calor", "Óculos de proteção"],
+          medidas: ["Isolamento térmico de superfícies quentes", "Sinalização de perigo", "Procedimentos seguros para contato com vapor ou líquidos quentes", "Monitoramento da temperatura em áreas críticas"]
+        },
+        "Radiação": {
+          epis: ["Avental de chumbo", "Dosímetro", "Óculos plumbíferos", "Máscara com filtro UV (para solda, por exemplo)"],
+          medidas: ["Blindagem da fonte de radiação", "Tempo de exposição mínimo", "Distância segura da fonte", "Autorização específica para acesso"]
+        },
+        "Gravitacional": {
+          epis: ["Capacete com jugular", "Bota com biqueira de aço", "Cinto de segurança (quando necessário)"],
+          medidas: ["Isolamento da área abaixo da carga", "Fixação segura de objetos em altura", "Proteção contra queda de ferramentas", "Planejamento de içamento e armazenamento seguro em alturas"]
+        },
+        "Residual": {
+          epis: ["Variam conforme o tipo de energia acumulada (ex: luvas, óculos, botas)"],
+          medidas: ["Verificação e dissipação de energia acumulada (capacitores, molas, cilindros)", "Bloqueio e inspeção antes da liberação", "Treinamento em energia residual", "Uso de procedimentos de verificação de energia zero"]
+        },
+        "Cinética": {
+          epis: ["Colete reflexivo", "Capacete", "Bota com biqueira", "Protetor auricular (em áreas com tráfego)"],
+          medidas: ["Controle de tráfego interno", "Separação de pedestres e veículos", "Sinalização e iluminação adequada", "Capacitação de operadores de máquinas móveis"]
+        },
+        "Sonora (ruído)": {
+          epis: ["Protetores auriculares (tipo concha ou plug)"],
+          medidas: ["Medição de níveis de ruído", "Isolamento acústico das fontes", "Rotinas de descanso auditivo", "Monitoramento periódico da audição dos trabalhadores"]
+        },
+        "Lumínica (ofuscamento)": {
+          epis: ["Máscara de solda", "Óculos com filtro UV", "Viseiras"],
+          medidas: ["Isolamento da área de solda ou corte", "Sinalização de área com radiação intensa", "Treinamento sobre riscos visuais", "Ajuste adequado dos equipamentos de proteção visual"]
+        }
       }
-      
     };
 
-
     function mostrarRiscos(checkbox) {
-      if (checkbox.value === "Trabalho em Altura") {
-        document.getElementById("riscos-altura").classList.toggle("hidden", !checkbox.checked);
-        document.getElementById("epis-altura").classList.add("hidden");
-        document.getElementById("detalhes-altura").innerHTML = "";
+      const tipoTrabalho = checkbox.value;
+      const idRiscos = `riscos-${tipoTrabalho.toLowerCase().replace(/ /g, '-')}`;
+      
+      // Esconde todas as seções de riscos primeiro
+      document.querySelectorAll('[id^="riscos-"]').forEach(el => {
+        el.classList.add('hidden');
+      });
+      
+      // Esconde todas as seções de EPIs
+      document.querySelectorAll('[id^="epis-"]').forEach(el => {
+        el.classList.add('hidden');
+      });
+      
+      // Mostra apenas a seção de riscos correspondente ao checkbox marcado
+      if (checkbox.checked) {
+        document.getElementById(idRiscos).classList.remove('hidden');
       }
     }
 
-
     function mostrarEPIs(atividade) {
-      const riscosSelecionados = [...document.querySelectorAll('#riscos-altura input:checked')].map(el => el.value);
-      const detalhes = document.getElementById("detalhes-altura");
+      const riscosSelecionados = [...document.querySelectorAll(`#riscos-${atividade.toLowerCase().replace(/ /g, '-')} input:checked`)].map(el => el.value);
+      const idDetalhes = `detalhes-${atividade.toLowerCase().replace(/ /g, '-')}`;
+      const detalhes = document.getElementById(idDetalhes);
       detalhes.innerHTML = "";
 
-
       if (riscosSelecionados.length === 0) {
-        document.getElementById("epis-altura").classList.add("hidden");
+        document.getElementById(`epis-${atividade.toLowerCase().replace(/ /g, '-')}`).classList.add('hidden');
         return;
       }
-
 
       riscosSelecionados.forEach(risco => {
         const info = dadosRiscos[atividade][risco];
@@ -198,10 +572,8 @@
         }
       });
 
-
-      document.getElementById("epis-altura").classList.remove("hidden");
+      document.getElementById(`epis-${atividade.toLowerCase().replace(/ /g, '-')}`).classList.remove('hidden');
     }
   </script>
 </body>
 </html>
-

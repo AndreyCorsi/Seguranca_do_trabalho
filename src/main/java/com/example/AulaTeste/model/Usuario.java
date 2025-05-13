@@ -29,9 +29,12 @@ public class Usuario {
     private float horaDeInicio;
     @Column(name = "previsaoDeTermino")
     private float previsaoDeTermino;
+      @Column(name = "localespecifico")
+    private String localespecifico;
    
     public Usuario(){}
-    public Usuario(String nome, String email, String senha, String setor, String empresa, String ptp, float horaDeInicio, float previsaoDeTermino){
+    public Usuario(String nome, String email, String senha, String setor, String empresa, String ptp, float horaDeInicio, float previsaoDeTermino, String localespecifico) {
+
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -40,5 +43,6 @@ public class Usuario {
         this.ptp = ptp;
         this.horaDeInicio = horaDeInicio;
         this.previsaoDeTermino = previsaoDeTermino;
+        this.localespecifico = localespecifico;
     }
 }
